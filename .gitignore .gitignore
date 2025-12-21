@@ -1,0 +1,58 @@
+# .NET Core / .NET 10
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.exe
+*.pdb
+*.log
+
+# Visual Studio
+.vs/
+*.vsidx
+*.vssscc
+.vscode/
+
+# Rider
+.idea/
+
+# Database files
+*.db
+*.db-shm
+*.db-wal
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+# Test results
+TestResults/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+
+# Azure
+*.pubxml
+*.azurePubxml
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+
+appsettings.Development.json
+**/Properties/launchSettings.json
