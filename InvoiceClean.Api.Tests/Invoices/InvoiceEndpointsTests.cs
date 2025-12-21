@@ -178,6 +178,74 @@ namespace InvoiceClean.Api.Tests.Invoices
             invoices.Should().HaveCountGreaterThanOrEqualTo(2);
         }
 
+        [Fact]
+        public async Task Update_invoice_with_invalid_data_returns_validation_error()
+        {
+            // Arrange - Create invoice first
+            var createRequest = new
+            {
+                number = "INV-TEST-004",
+                date = "2025-12-21",
+                lines = new[]
+                {
+                    new { description = "Service D", quantity = 1, unitPrice = 50m }
+                }
+            };
+
+            var postResponse = await _client.PostAsJsonAsync("/api/invoices", createRequest);
+            var id = await postResponse.Content.ReadFromJsonAsync<Guid>();
+
+            // Act - Update with invalid data (empty customer name)
+            var updateRequest = new
+            {
+                number = "INV-TEST-004",
+                date = "2025-12-21",
+                customerName = "",  // Invalid - empty
+                customerAddress = (string?)null,
+                customerVat = (string?)null
+            };
+
+            var response = await _client.PutAsJsonAsync($"/api/invoices/{id}", updateRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+            var content = await response.Content.ReadAsStringAsync();
+            content.Should().Contain("Customer name is required");
+        }
+
+        [Fact]
+        public async Task Update_invoice_with_too_long_number_returns_validation_error()
+        {
+            // Arrange
+            var createRequest = new
+            {
+                number = "INV-TEST-005",
+                date = "2025-12-21",
+                lines = new[]
+                {
+                    new { description = "Service E", quantity = 1, unitPrice = 50m }
+                }
+            };
+
+            var postResponse = await _client.PostAsJsonAsync("/api/invoices", createRequest);
+            var id = await postResponse.Content.ReadFromJsonAsync<Guid>();
+
+            // Act - Update with too long number
+            var updateRequest = new
+            {
+                number = new string('X', 51),  // 51 characters - exceeds max length
+                date = "2025-12-21",
+                customerName = "Test Customer",
+                customerAddress = (string?)null,
+                customerVat = (string?)null
+            };
+
+            var response = await _client.PutAsJsonAsync($"/api/invoices/{id}", updateRequest);
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
         private sealed record InvoiceDto(
             Guid Id,
             string Number,
