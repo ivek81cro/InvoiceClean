@@ -1,8 +1,9 @@
+using InvoiceClean.Application.Common.Results;
 using MediatR;
 
 namespace InvoiceClean.Application.Invoices.GetInvoiceById
 {
-    public sealed record GetInvoiceByIdQuery(Guid Id) : IRequest<InvoiceDto>;
+    public sealed record GetInvoiceByIdQuery(Guid Id) : IRequest<Result<InvoiceDto>>;
 
     public sealed record InvoiceDto(
         Guid Id,

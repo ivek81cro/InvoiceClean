@@ -1,3 +1,4 @@
+using InvoiceClean.Api.Common;
 using InvoiceClean.Application.Invoices.CreateInvoice;
 using InvoiceClean.Application.Invoices.GetInvoiceById;
 using MediatR;
@@ -16,19 +17,17 @@ namespace InvoiceClean.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Guid>> Create(CreateInvoiceRequest request, CancellationToken cancellationToken)
         {
-            var id = await _mediator.Send(
+            var result = await _mediator.Send(
                 new CreateInvoiceCommand(request.Number, request.Date, request.Lines), cancellationToken);
 
-            return CreatedAtAction(nameof(GetById), new { id }, id);
+            return this.CreatedFromResult(nameof(GetById), new { id = result.Value }, result);
         }
 
         [HttpGet("{id:guid}")]
         public async Task<ActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var dto = await _mediator.Send(new GetInvoiceByIdQuery(id), cancellationToken);
-            if (dto is null) return NotFound();
-
-            return Ok(dto);
+            var result = await _mediator.Send(new GetInvoiceByIdQuery(id), cancellationToken);
+            return this.ToActionResult(result);
         }
     }
 

@@ -114,7 +114,3 @@ Database connection string in `appsettings.json`:
 ## 📄 License
 
 This project is for educational purposes demonstrating Clean Architecture patterns.
-
-## 🤝 Author
-
-Built as a demonstration of modern .NET architecture patterns with Clean Architecture, CQRS, and Domain-Driven Design principles.

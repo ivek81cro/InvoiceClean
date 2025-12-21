@@ -27,6 +27,7 @@ builder.Services.AddScoped<IInvoiceRepository, InvoiceRepository>();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(InvoiceClean.Application.Invoices.IInvoiceRepository).Assembly));
 builder.Services.AddValidatorsFromAssembly(typeof(InvoiceClean.Application.Invoices.IInvoiceRepository).Assembly);
 builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ResultValidationBehavior<,>));
 
 // ProblemDetails (minimal)
 builder.Services.AddProblemDetails();
