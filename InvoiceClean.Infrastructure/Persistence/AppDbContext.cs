@@ -17,6 +17,9 @@ namespace InvoiceClean.Infrastructure.Persistence
                 b.HasKey(x => x.Id);
 
                 b.Property(x => x.Number).HasMaxLength(50).IsRequired();
+                b.Property(x => x.CustomerName).HasMaxLength(200).IsRequired();
+                b.Property(x => x.CustomerAddress).HasMaxLength(500);
+                b.Property(x => x.CustomerVat).HasMaxLength(50);
 
                 // Mapiraj navigaciju preko property-ja Lines
                 b.HasMany(x => x.Lines)

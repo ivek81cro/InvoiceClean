@@ -7,5 +7,6 @@ namespace InvoiceClean.Application.Invoices
         Task AddAsync(Invoice invoice, CancellationToken cancellationToken);
         Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
         Task<List<Invoice>> GetAllAsync(CancellationToken cancellationToken);
+        Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken);
     }
 }

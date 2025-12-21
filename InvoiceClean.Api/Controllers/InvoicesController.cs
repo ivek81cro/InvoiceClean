@@ -1,7 +1,9 @@
 using InvoiceClean.Api.Common;
+using InvoiceClean.Api.Contracts;
 using InvoiceClean.Application.Invoices.CreateInvoice;
 using InvoiceClean.Application.Invoices.GetAllInvoiceId;
 using InvoiceClean.Application.Invoices.GetInvoiceById;
+using InvoiceClean.Application.Invoices.UpdateInvoice;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,6 +37,23 @@ namespace InvoiceClean.Api.Controllers
         public async Task<ActionResult> GetAll(CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetAllInvoiceIdsQuery(), cancellationToken);
+            return this.ToActionResult(result);
+        }
+
+        [HttpPut("{id:guid}")]
+        public async Task<ActionResult> UpdateInvoice(Guid id, [FromBody] UpdateInvoiceRequest request, CancellationToken cancellationToken)
+        {
+            var command = new UpdateInvoiceCommand(
+                id,
+                request.Number,
+                request.Date,
+                request.CustomerName,
+                request.CustomerAddress,
+                request.CustomerVat
+            );
+
+            var result = await _mediator.Send(command, cancellationToken);
+
             return this.ToActionResult(result);
         }
     }

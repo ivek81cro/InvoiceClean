@@ -28,5 +28,11 @@ namespace InvoiceClean.Infrastructure.Invoices
                 .OrderByDescending(x => x.Date)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task UpdateAsync(Invoice invoice, CancellationToken cancellationToken)
+        {
+            _db.Invoices.Update(invoice);
+            await _db.SaveChangesAsync(cancellationToken);
+        }
     }
 }
