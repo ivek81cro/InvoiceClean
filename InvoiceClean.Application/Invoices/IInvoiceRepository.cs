@@ -4,7 +4,8 @@ namespace InvoiceClean.Application.Invoices
 {
     public interface IInvoiceRepository
     {
-        Task AddAsync(Invoice invoice, CancellationToken ct);
-        Task<Invoice?> GetByIdAsync(Guid id, CancellationToken ct);
+        Task AddAsync(Invoice invoice, CancellationToken cancellationToken);
+        Task<Invoice?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        Task<List<Invoice>> GetAllAsync(CancellationToken cancellationToken);
     }
 }

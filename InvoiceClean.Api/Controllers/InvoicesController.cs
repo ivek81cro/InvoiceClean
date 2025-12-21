@@ -1,5 +1,6 @@
 using InvoiceClean.Api.Common;
 using InvoiceClean.Application.Invoices.CreateInvoice;
+using InvoiceClean.Application.Invoices.GetAllInvoiceId;
 using InvoiceClean.Application.Invoices.GetInvoiceById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,13 @@ namespace InvoiceClean.Api.Controllers
         public async Task<ActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
             var result = await _mediator.Send(new GetInvoiceByIdQuery(id), cancellationToken);
+            return this.ToActionResult(result);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAll(CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAllInvoiceIdsQuery(), cancellationToken);
             return this.ToActionResult(result);
         }
     }

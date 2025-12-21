@@ -21,5 +21,12 @@ namespace InvoiceClean.Infrastructure.Invoices
         {
             return _db.Invoices.Include(x => x.Lines).FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
+
+        public async Task<List<Invoice>> GetAllAsync(CancellationToken cancellationToken)
+        {
+            return await _db.Invoices
+                .OrderByDescending(x => x.Date)
+                .ToListAsync(cancellationToken);
+        }
     }
 }
