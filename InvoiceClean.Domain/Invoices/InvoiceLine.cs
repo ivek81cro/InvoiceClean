@@ -22,5 +22,17 @@ namespace InvoiceClean.Domain.Invoices
         }
 
         public decimal LineTotal => Quantity * UnitPrice;
+
+        public void Update(string description, decimal quantity, decimal unitPrice)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+                throw new DomainException("Description is required.");
+            if (quantity <= 0) throw new DomainException("Quantity must be > 0.");
+            if (unitPrice < 0) throw new DomainException("Unit price must be >= 0.");
+
+            Description = description;
+            Quantity = quantity;
+            UnitPrice = unitPrice;
+        }
     }
 }

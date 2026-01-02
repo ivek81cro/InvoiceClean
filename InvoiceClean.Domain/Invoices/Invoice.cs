@@ -46,5 +46,26 @@ namespace InvoiceClean.Domain.Invoices
             CustomerAddress = customerAddress;
             CustomerVat = customerVat;
         }
+
+        public void UpdateLine(Guid lineId, string description, decimal quantity, decimal unitPrice)
+        {
+            var line = _lines.FirstOrDefault(l => l.Id == lineId);
+            if (line is null)
+                throw new DomainException($"Invoice line with ID '{lineId}' not found.");
+
+            line.Update(description, quantity, unitPrice);
+        }
+
+        public void RemoveLine(Guid lineId)
+        {
+            var line = _lines.FirstOrDefault(l => l.Id == lineId);
+            if (line is null)
+                throw new DomainException($"Invoice line with ID '{lineId}' not found.");
+
+            if (_lines.Count == 1)
+                throw new DomainException("Cannot remove the last invoice line. Invoice must have at least one line.");
+
+            _lines.Remove(line);
+        }
     }
 }
