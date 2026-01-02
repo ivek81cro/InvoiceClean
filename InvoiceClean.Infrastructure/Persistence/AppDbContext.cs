@@ -6,6 +6,7 @@ namespace InvoiceClean.Infrastructure.Persistence
     public sealed class AppDbContext : DbContext
     {
         public DbSet<Invoice> Invoices => Set<Invoice>();
+        public DbSet<InvoiceLine> InvoiceLines => Set<InvoiceLine>();
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -24,6 +25,7 @@ namespace InvoiceClean.Infrastructure.Persistence
                 // Mapiraj navigaciju preko property-ja Lines
                 b.HasMany(x => x.Lines)
                  .WithOne()
+                 .HasForeignKey(l => l.InvoiceId)
                  .OnDelete(DeleteBehavior.Cascade);
 
                 // Reci EF-u da Lines koristi backing field "_lines"
@@ -37,6 +39,7 @@ namespace InvoiceClean.Infrastructure.Persistence
                 b.ToTable("InvoiceLines");
                 b.HasKey(x => x.Id);
                 b.Property(x => x.Description).HasMaxLength(200).IsRequired();
+                b.Property(x => x.InvoiceId).IsRequired();
             });
         }
     }

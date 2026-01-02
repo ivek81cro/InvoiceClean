@@ -1,4 +1,5 @@
 using InvoiceClean.Application.Common.Results;
+using InvoiceClean.Application.Invoices.Common;
 using InvoiceClean.Application.Invoices.GetInvoiceById;
 using MediatR;
 
@@ -17,8 +18,8 @@ namespace InvoiceClean.Application.Invoices.UpdateInvoice
             {
                 return Result<InvoiceDto>.Fail(new Error(
                     ErrorType.NotFound,
-                    Code: "invoice_not_found",
-                    Message: $"Invoice '{request.Id}' was not found."
+                    Code: InvoiceErrors.NotFoundCode,
+                    Message: InvoiceErrors.NotFoundMessage(request.Id)
                 ));
             }
 
@@ -28,13 +29,7 @@ namespace InvoiceClean.Application.Invoices.UpdateInvoice
 
             await _repo.UpdateAsync(invoice, cancellationToken);
 
-            var lines = invoice.Lines
-                .Select(l => new InvoiceLineDto(l.Id, l.Description, l.Quantity, l.UnitPrice, l.LineTotal))
-                .ToList();
-
-            var dto = new InvoiceDto(invoice.Id, invoice.Number, invoice.Date, invoice.Total, lines);
-
-            return Result<InvoiceDto>.Ok(dto);
+            return Result<InvoiceDto>.Ok(invoice.ToDto());
         }
     }
 }

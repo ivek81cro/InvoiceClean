@@ -1,9 +1,10 @@
 using InvoiceClean.Application.Common.Results;
+using InvoiceClean.Application.Invoices.Common;
 using MediatR;
 
 namespace InvoiceClean.Application.Invoices.GetInvoiceById
 {
-    internal class GetInvoiceByIdHandler : IRequestHandler<GetInvoiceByIdQuery, Result<InvoiceDto>>
+    internal sealed class GetInvoiceByIdHandler : IRequestHandler<GetInvoiceByIdQuery, Result<InvoiceDto>>
     {
         private readonly IInvoiceRepository _repo;
 
@@ -11,22 +12,18 @@ namespace InvoiceClean.Application.Invoices.GetInvoiceById
 
         public async Task<Result<InvoiceDto>> Handle(GetInvoiceByIdQuery request, CancellationToken cancellationToken)
         {
-            var inv = await _repo.GetByIdAsync(request.Id, cancellationToken);
-            if (inv is null)
+            var invoice = await _repo.GetByIdAsync(request.Id, cancellationToken);
+            
+            if (invoice is null)
             {
                 return Result<InvoiceDto>.Fail(new Error(
-                ErrorType.NotFound,
-                Code: "invoice_not_found",
-                Message: $"Invoice '{request.Id}' was not found."
-            ));
+                    ErrorType.NotFound,
+                    Code: InvoiceErrors.NotFoundCode,
+                    Message: InvoiceErrors.NotFoundMessage(request.Id)
+                ));
             }
 
-            var lines = inv.Lines
-                .Select(l => new InvoiceLineDto(l.Id, l.Description, l.Quantity, l.UnitPrice, l.LineTotal))
-                .ToList();
-
-            var dto = new InvoiceDto(inv.Id, inv.Number, inv.Date, inv.Total, lines);
-            return Result<InvoiceDto>.Ok(dto);
+            return Result<InvoiceDto>.Ok(invoice.ToDto());
         }
     }
 }

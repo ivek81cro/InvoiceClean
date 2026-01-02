@@ -3,6 +3,7 @@ namespace InvoiceClean.Domain.Invoices
     public sealed class InvoiceLine
     {
         public Guid Id { get; private set; } = Guid.NewGuid();
+        public Guid InvoiceId { get; private set; }
         public string Description { get; private set; } = default!;
         public decimal Quantity { get; private set; }
         public decimal UnitPrice { get; private set; }
